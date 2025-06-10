@@ -4,6 +4,9 @@ const app = express();
 const multer = require("multer");
 const docxConverter = require("docx-pdf");
 const path = require("path");
+const cors = require("cors");
+
+app.use(cors());
 
 // Setting up the file storage
 const storage = multer.diskStorage({
@@ -32,7 +35,6 @@ app.post("/convertfile", upload.single("file"), (req, res, next) => {
 
     docxConverter(req.file.path, outputPath, (err, result) => {
       if (err) {
-        console.log(err);
         return res.status(500).json({
           message: "Error in converting docx to pdf",
         });
@@ -42,10 +44,9 @@ app.post("/convertfile", upload.single("file"), (req, res, next) => {
       });
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
-        message:"Internal Server error"
-    })
+      message: "Internal Server error",
+    });
   }
 });
 
